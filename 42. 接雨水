@@ -1,0 +1,33 @@
+最直接，最基础的方法是用双单调栈的方式解决，虽然时空复杂度高，但是易于理解呀
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+
+        stack_left = []
+        stack_right = []
+        
+        list_left = [0]*n
+        list_right = [0]*n
+
+        list_h = [0]*n
+
+        for i, h in enumerate(height):
+            if stack_left:
+                list_left[i] = stack_left[0] - h
+            while(stack_left and stack_left[-1] <= h):
+                stack_left.pop()
+            stack_left.append(h)
+
+        for i in range(n-1,-1,-1):
+            if stack_right:
+                list_right[i] = stack_right[0] - height[i]
+            while(stack_right and stack_right[-1] <= height[i]):
+                stack_right.pop()
+            stack_right.append(height[i])
+        
+        for i in range(n):
+            if list_left[i] > 0 and list_right[i] > 0:
+                list_h[i] = min(list_left[i],list_right[i])
+
+        return sum(list_h)
